@@ -27,13 +27,16 @@ export const fetchS3Folder = async (key: string, localPath: string): Promise<voi
 
                     const data = await s3.getObject(getObjectParams).promise();
                     if (data.Body) {
-                        const fileData = data.Body;
                         const filePath = `${localPath}/${fileKey.replace(key, "")}`;
-                        
-                        await writeFile(filePath, fileData);
 
+                        const buffer = Buffer.isBuffer(data.Body)
+                            ? data.Body
+                            : Buffer.from(data.Body as string | Uint8Array);
+
+                        await writeFile(filePath, buffer);
                         console.log(`Downloaded ${fileKey} to ${filePath}`);
                     }
+
                 }
             }));
         }
@@ -54,7 +57,7 @@ export async function copyS3Folder(sourcePrefix: string, destinationPrefix: stri
         const listedObjects = await s3.listObjectsV2(listParams).promise();
 
         if (!listedObjects.Contents || listedObjects.Contents.length === 0) return;
-        
+
         // Copy each object to the new location
         await Promise.all(listedObjects.Contents.map(async (object) => {
             if (!object.Key) return;

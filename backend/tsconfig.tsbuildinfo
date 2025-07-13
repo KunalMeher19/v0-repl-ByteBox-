@@ -1,1 +1,1 @@
-{"root":["./src/aws.ts","./src/fs.ts","./src/http.ts","./src/index.ts","./src/pty.ts","./src/ws.ts"],"errors":true,"version":"5.8.3"}
+{"root":["./src/aws.ts","./src/fs.ts","./src/http.ts","./src/index.ts","./src/pty.ts","./src/ws.ts"],"version":"5.8.3"}

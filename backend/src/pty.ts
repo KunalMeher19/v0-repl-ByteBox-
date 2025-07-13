@@ -2,7 +2,7 @@
 import { fork, IPty } from 'node-pty';
 import path from "path";
 
-const SHELL = "bash";
+const SHELL = process.platform === "win32" ? "cmd.exe" : "bash";
 
 export class TerminalManager {
     private sessions: { [id: string]: {terminal: IPty, replId: string;} } = {};
@@ -12,6 +12,7 @@ export class TerminalManager {
     }
     
     createPty(id: string, replId: string, onData: (data: string, id: number) => void) {
+        console.log("Launching PTY with shell:", SHELL);
         let term = fork(SHELL, [], {
             cols: 100,
             name: 'xterm',

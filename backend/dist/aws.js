@@ -42,9 +42,11 @@ const fetchS3Folder = (key, localPath) => __awaiter(void 0, void 0, void 0, func
                     };
                     const data = yield s3.getObject(getObjectParams).promise();
                     if (data.Body) {
-                        const fileData = data.Body;
                         const filePath = `${localPath}/${fileKey.replace(key, "")}`;
-                        yield writeFile(filePath, fileData);
+                        const buffer = Buffer.isBuffer(data.Body)
+                            ? data.Body
+                            : Buffer.from(data.Body);
+                        yield writeFile(filePath, buffer);
                         console.log(`Downloaded ${fileKey} to ${filePath}`);
                     }
                 }
